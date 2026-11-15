@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LensLab ILO – Camera rental in Iloilo City</title>
+<meta name="description" content="Rent a Canon EOS camera by the day in Arevalo, Iloilo City. Pick your dates and pickup time online.">
+<link rel="icon" href="img/logo-full.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#000;--paper:#fff;--soft:#f3f3f1;--line:#dcdcd8;--mute:#6b6b68;--ok:#0a7d3c;--bad:#c4281c;
+--d:'Bricolage Grotesque',system-ui,sans-serif;--b:'Instrument Sans',system-ui,sans-serif;--r:6px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{font:16px/1.55 var(--b);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--d);letter-spacing:-.03em;line-height:1}
+/* viewfinder corners: the one signature element */
+.vf{position:relative}
+.vf::before,.vf::after{content:"";position:absolute;width:18px;height:18px;border:0 solid var(--ink);pointer-events:none;transition:.25s}
+.vf::before{top:-1px;left:-1px;border-width:3px 0 0 3px}
+.vf::after{bottom:-1px;right:-1px;border-width:0 3px 3px 0}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+nav img{height:38px;width:auto}
+nav .links{display:flex;gap:6px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);background:var(--ink);color:#fff;padding:13px 22px;font-weight:600;border-radius:var(--r);transition:.15s;text-decoration:none}
+.btn:hover{background:#fff;color:var(--ink)}
+.btn.ghost{background:#fff;color:var(--ink)}.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.sm{padding:8px 14px;font-size:14px}
+.btn[disabled]{opacity:.35;pointer-events:none}
+/* hero */
+.hero{padding:64px 0 40px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(44px,7vw,92px);font-weight:800}
+.hero p{margin:22px 0 28px;max-width:46ch;color:#333;font-size:18px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero .pills{margin-top:30px;display:flex;gap:18px;flex-wrap:wrap;color:var(--mute);font-size:14px}
+.hero .pills b{color:var(--ink);font-weight:600}
+.hero .frame{padding:18px;background:var(--soft);border-radius:2px}
+.hero .frame img{border-radius:2px;width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;transition:opacity .4s}
+.hero .frame .cap{display:flex;justify-content:space-between;margin-top:12px;font-size:14px;color:var(--mute)}
+.hero .frame .cap b{color:var(--ink)}
+/* booking */
+section.book{padding:56px 0 24px;border-top:1px solid var(--line)}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+.head h2{font-size:clamp(32px,4.4vw,52px);font-weight:800}
+.head p{color:var(--mute);max-width:42ch}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start}
+.step{border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:18px;background:#fff}
+.step.locked{opacity:.45;pointer-events:none}
+.step h3{font-size:22px;margin-bottom:4px}
+.step .sub{color:var(--mute);font-size:14px;margin-bottom:16px}
+.cams{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.cam{text-align:left;border:1px solid var(--line);background:#fff;padding:12px;border-radius:2px;position:relative;transition:.2s}
+.cam:hover{border-color:var(--ink)}
+.cam img{aspect-ratio:4/3;object-fit:contain;width:100%;background:var(--soft);margin-bottom:10px}
+.cam .n{font-family:var(--d);font-weight:700;font-size:18px;letter-spacing:-.02em}
+.cam .t{font-size:13px;color:var(--mute);margin:2px 0 8px;min-height:2.6em}
+.cam .p{font-weight:600}.cam .p small{font-weight:400;color:var(--mute)}
+.cam[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.cam[aria-pressed=true]::before,.cam[aria-pressed=true]::after{content:"";position:absolute;width:18px;height:18px;border:0 solid var(--ink)}
+.cam[aria-pressed=true]::before{top:-5px;left:-5px;border-width:4px 0 0 4px}
+.cam[aria-pressed=true]::after{bottom:-5px;right:-5px;border-width:0 4px 4px 0}
+/* calendar */
+.cal{max-width:430px}
+.cal .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal .top b{font-family:var(--d);font-size:20px;letter-spacing:-.02em}
+.cal .nav{width:38px;height:38px;border:1px solid var(--line);background:#fff;border-radius:50%;font-size:18px}
+.cal .nav:hover:not([disabled]){border-color:var(--ink)}.cal .nav[disabled]{opacity:.3}
+.cal .dow,.cal .days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal .dow span{text-align:center;font-size:12px;color:var(--mute);padding:4px 0}
+.day{aspect-ratio:1;border:0;background:transparent;border-radius:50%;font-weight:500;position:relative}
+.day:hover:not([disabled]){background:var(--soft)}
+.day[disabled]{color:#bdbdb8;cursor:not-allowed}
+.day.full{text-decoration:line-through}
+.day.today{box-shadow:inset 0 0 0 1px var(--ink)}
+.day.in{background:var(--soft);border-radius:0}
+.day.s,.day.e{background:var(--ink);color:#fff}
+.day.s{border-radius:50% 0 0 50%}.day.e{border-radius:0 50% 50% 0}
+.day.s.e{border-radius:50%}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--mute);margin-top:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--ink)}
+.legend i.f{background:none;border:1px solid #bdbdb8}
+.msg{margin-top:12px;font-size:14px;min-height:20px}.msg.err{color:var(--bad)}
+.slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.slot{border:1px solid var(--line);background:#fff;padding:12px 14px;border-radius:2px;text-align:left;position:relative}
+.slot small{display:block;color:var(--mute);font-size:12px}
+.slot:hover:not([disabled]){border-color:var(--ink)}
+.slot[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}.slot[aria-pressed=true] small{color:#ccc}
+.slot[disabled]{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form .full{grid-column:1/-1}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:5px}
+label span{font-weight:400;color:var(--mute)}
+input,textarea{width:100%;font:inherit;padding:12px 13px;border:1px solid #b9b9b4;border-radius:var(--r);background:#fff}
+input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:var(--ink)}
+textarea{min-height:76px;resize:vertical}
+.hp{position:absolute;left:-9999px}
+/* summary */
+.sum{position:sticky;top:84px;border:2px solid var(--ink);padding:22px;border-radius:2px;background:#fff}
+.sum h3{font-size:22px;margin-bottom:14px}
+.sum .row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.sum .row span:first-child{color:var(--mute)}
+.sum .row b{text-align:right;font-weight:600}
+.sum .tot{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 4px}
+.sum .tot b{font-family:var(--d);font-size:34px;letter-spacing:-.03em}
+.sum .note{font-size:13px;color:var(--mute);margin-bottom:16px}
+.sum .btn{width:100%}
+.inc{margin:10px 0 0;padding-left:18px;font-size:14px;color:#333}
+/* done */
+.done{text-align:center;padding:38px 22px}
+.done .ref{font-family:var(--d);font-weight:800;font-size:clamp(34px,6vw,56px);letter-spacing:.02em;margin:12px 0}
+.done .box{display:inline-block;padding:20px 30px;margin:10px 0 18px}
+.done p{max-width:52ch;margin:0 auto 10px;color:#333}
+/* info + footer */
+.info{padding:56px 0;border-top:1px solid var(--line);margin-top:32px}
+.info .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.info h3{font-size:22px;margin-bottom:10px}
+.info p,.info li{color:#333;font-size:15px}.info ul{padding-left:18px}
+footer{background:var(--ink);color:#fff;padding:36px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer img{height:44px;filter:invert(1)}
+footer a{color:#fff}footer small{color:#aaa;display:block}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.open{display:flex}
+.modal .card{background:#fff;max-width:440px;width:100%;padding:26px;border-radius:2px;max-height:90vh;overflow:auto}
+.modal h3{font-size:26px;margin-bottom:14px}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:13px;font-weight:600;border:1px solid var(--ink)}
+.badge.confirmed,.badge.completed{background:var(--ink);color:#fff}.badge.cancelled{text-decoration:line-through;color:var(--mute);border-color:var(--mute)}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.sum{position:static}.info .cols{grid-template-columns:1fr}}
+@media(max-width:520px){.cams{grid-template-columns:1fr 1fr;gap:8px}.cam{padding:8px}.form{grid-template-columns:1fr}.slots{grid-template-columns:1fr}nav .links .hide-s{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a href="#top" aria-label="LensLab ILO home"><img src="img/logo-full.png" alt="LensLab ILO"></a>
+  <div class="links">
+    <button class="btn ghost sm" id="openLookup">Find my booking</button>
+    <a class="btn sm hide-s" href="#book">Book a camera</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <h1>Rent the camera.<br>Keep the shots.</h1>
+    <p>Canon DSLR and mirrorless cameras by the day, ready for your trip, event or shoot. Pick your dates and pickup time online, then we confirm with you.</p>
+    <div class="cta"><a class="btn" href="#book">Pick your dates</a><a class="btn ghost" href="#how">How it works</a></div>
+    <div class="pills"><span><b id="fromPrice">–</b> per day, from</span><span><b>Arevalo</b>, Iloilo City pickup</span></div>
+  </div>
+  <div class="vf frame">
+    <img id="heroImg" src="img/poster.jpg" alt="Canon cameras available for rent">
+    <div class="cap"><b id="heroName">Four Canon cameras</b><span id="heroPrice"></span></div>
+  </div>
+</div></header>
+
+<section class="book" id="book"><div class="wrap">
+  <div class="head"><h2>Book your camera</h2><p>Choose a camera, pick the days you need it, then a pickup time. No payment online.</p></div>
+  <div class="grid">
+    <div id="flow">
+      <div class="step" id="st1">
+        <h3>1. Choose a camera</h3><div class="sub">Prices are per day.</div>
+        <div class="cams" id="cams"><p style="color:var(--mute)">Loading cameras…</p></div>
+      </div>
+      <div class="step locked" id="st2">
+        <h3>2. Pick your dates</h3><div class="sub">Tap the first day, then the last day. Crossed-out days are taken.</div>
+        <div class="cal" id="cal"></div>
+        <div class="legend"><span><i></i>Your dates</span><span><i class="f"></i>Not available</span></div>
+        <div class="msg" id="calMsg" role="status"></div>
+      </div>
+      <div class="step locked" id="st3">
+        <h3>3. Pickup time</h3><div class="sub" id="slotSub">Pick dates first.</div>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div class="step locked" id="st4">
+        <h3>4. Your details</h3><div class="sub">We use these only to confirm your booking.</div>
+        <form class="form" id="form" novalidate>
+          <div><label for="fName">Full name</label><input id="fName" autocomplete="name" required></div>
+          <div><label for="fPhone">Mobile number</label><input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09xx xxx xxxx" required></div>
+          <div><label for="fEmail">Email <span>(optional)</span></label><input id="fEmail" type="email" autocomplete="email"></div>
+          <div><label for="fFb">Facebook name <span>(optional)</span></label><input id="fFb"></div>
+          <div class="full"><label for="fNotes">Notes <span>(optional)</span></label><textarea id="fNotes" placeholder="Event, extra requests…"></textarea></div>
+          <input class="hp" id="fWeb" tabindex="-1" autocomplete="off" aria-hidden="true">
+        </form>
+      </div>
+    </div>
+    <aside class="sum vf" id="sum" aria-live="polite">
+      <h3>Your booking</h3>
+      <div id="sumRows"></div>
+      <div class="tot"><span>Rental total</span><b id="sumTot">₱0</b></div>
+      <div class="note" id="sumNote">Pick a camera and dates to see the price.</div>
+      <div class="msg err" id="subMsg" role="alert"></div>
+      <button class="btn" id="submit" disabled>Request booking</button>
+    </aside>
+  </div>
+</div></section>
+
+<section class="info" id="how"><div class="wrap"><div class="cols">
+  <div><h3>How it works</h3><ul><li>Choose a camera, dates and a pickup time.</li><li>You get a booking reference right away.</li><li>We message you to confirm. Pay when you pick up.</li></ul></div>
+  <div><h3>What's included</h3><ul id="incList"><li>Kit lens, battery and charger</li><li>Memory card and strap</li></ul></div>
+  <div><h3>Good to know</h3><ul><li>Bring a valid ID at pickup.</li><li>A refundable deposit is held while you rent.</li><li>Cancel free from your booking page, up to the day before.</li></ul></div>
+</div></div></section>
+
+<footer><div class="wrap">
+  <img src="img/logo-full.png" alt="LensLab ILO">
+  <div><b>Sto. Niño Sur, Arevalo, Iloilo City</b><small>Facebook: <a href="https://www.facebook.com/search/top?q=LensLab%20ILO" target="_blank" rel="noopener">LensLab ILO</a></small></div>
+  <small>© <span id="yr"></span> LensLab ILO</small>
+</div></footer>
+
+<div class="modal" id="lookup" role="dialog" aria-modal="true" aria-labelledby="lkT"><div class="card vf">
+  <h3 id="lkT">Find my booking</h3>
+  <form id="lkForm" class="form" style="grid-template-columns:1fr">
+    <div><label for="lkRef">Booking reference</label><input id="lkRef" placeholder="LL-ABC123" autocapitalize="characters"></div>
+    <div><label for="lkPhone">Mobile number used</label><input id="lkPhone" type="tel" inputmode="tel"></div>
+    <button class="btn" type="submit">Look up</button>
+  </form>
+  <div class="msg err" id="lkMsg"></div><div id="lkRes"></div>
+  <button class="btn ghost sm" id="lkClose" style="margin-top:16px">Close</button>
+</div></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), peso=n=>'₱'+Number(n).toLocaleString('en-PH');
+const S={cams:[],cam:null,start:null,end:null,slot:null,free:{},today:'',max:14,slots:[],month:null};
+const pad=n=>String(n).padStart(2,'0'), ymd=(y,m,d)=>y+'-'+pad(m+1)+'-'+pad(d);
+const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d))};
+const fmt=s=>parse(s).toLocaleDateString('en-PH',{timeZone:'UTC',weekday:'short',month:'short',day:'numeric'});
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/864e5)+1;
+const addD=(s,n)=>{const d=parse(s);d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+async function api(url,opt){const r=await fetch(url,opt);let j={};try{j=await r.json()}catch{}return j}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('#yr').textContent=new Date().getFullYear();
+
+async function init(){
+  const j=await api('/api/cameras');
+  if(!j.success){$('#cams').innerHTML='<p class="msg err">Could not load cameras. Please refresh.</p>';return}
+  S.cams=j.cameras;S.today=j.today;S.max=j.max_days;S.slots=j.slots;
+  const t=parse(S.today);S.month={y:t.getUTCFullYear(),m:t.getUTCMonth()};
+  $('#fromPrice').textContent=peso(Math.min(...S.cams.map(c=>c.price_per_day)));
+  $('#cams').innerHTML=S.cams.map(c=>`<button class="cam" data-id="${esc(c.id)}" aria-pressed="false"><img src="${esc(c.image)}" alt="${esc(c.name)}" loading="lazy"><div class="n">${esc(c.name)}</div><div class="t">${esc(c.tagline)}</div><div class="p">${peso(c.price_per_day)} <small>/ day</small></div></button>`).join('');
+  document.querySelectorAll('.cam').forEach(b=>b.onclick=()=>pickCam(b.dataset.id));
+  let i=0;setInterval(()=>{if(S.cam)return;i=(i+1)%S.cams.length;hero(S.cams[i])},3500);
+  const p=new URLSearchParams(location.search).get('ref');if(p){$('#lkRef').value=p;openLookup()}
+}
+function hero(c){const im=$('#heroImg');im.style.opacity=0;setTimeout(()=>{im.src=c.image;im.alt=c.name;im.style.opacity=1;$('#heroName').textContent=c.name;$('#heroPrice').textContent=peso(c.price_per_day)+' / day'},180)}
+
+async function pickCam(id){
+  S.cam=S.cams.find(c=>c.id===id);S.start=S.end=S.slot=null;
+  document.querySelectorAll('.cam').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+  hero(S.cam);
+  $('#incList').innerHTML=(S.cam.includes||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>Ask us what is included</li>';
+  $('#st2').classList.remove('locked');['#st3','#st4'].forEach(s=>$(s).classList.add('locked'));
+  $('#slots').innerHTML='';$('#slotSub').textContent='Pick dates first.';
+  $('#calMsg').textContent='Loading availability…';
+  const j=await api('/api/availability?camera='+encodeURIComponent(id)+'&from='+S.today+'&to='+addD(S.today,180));
+  S.free=j.free||{};$('#calMsg').textContent='';renderCal();summary();
+  if(window.innerWidth<900)$('#st2').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderCal(){
+  const {y,m}=S.month,first=new Date(Date.UTC(y,m,1)).getUTCDay(),dim=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+  const t=parse(S.today),canPrev=y>t.getUTCFullYear()||m>t.getUTCMonth()&&y===t.getUTCFullYear();
+  let h=`<div class="top"><button class="nav" id="pm" aria-label="Previous month" ${canPrev?'':'disabled'}>‹</button><b>${new Date(Date.UTC(y,m,1)).toLocaleDateString('en-PH',{timeZone:'UTC',month:'long',year:'numeric'})}</b><button class="nav" id="nm" aria-label="Next month">›</button></div><div class="dow">${'SMTWTFS'.split('').map(d=>`<span>${d}</span>`).join('')}</div><div class="days">`;
+  for(let i=0;i<first;i++)h+='<span></span>';
+  for(let d=1;d<=dim;d++){
+    const s=ymd(y,m,d),past=s<S.today,known=s in S.free,full=known&&S.free[s]<1,dis=past||full||!known;
+    let c='day';if(full)c+=' full';if(s===S.today)c+=' today';
+    if(S.start&&s===S.start)c+=' s';if(S.end&&s===S.end)c+=' e';
+    if(S.start&&S.end&&s>S.start&&s<S.end)c+=' in';
+    if(S.start&&!S.end&&s===S.start)c+=' e';
+    h+=`<button class="${c}" data-d="${s}" ${dis?'disabled':''} aria-label="${fmt(s)}${full?' unavailable':''}">${d}</button>`;
+  }
+  $('#cal').innerHTML=h+'</div>';
+  $('#pm').onclick=()=>{S.month.m--;if(S.month.m<0){S.month.m=11;S.month.y--}renderCal()};
+  $('#nm').onclick=()=>{S.month.m++;if(S.month.m>11){S.month.m=0;S.month.y++}renderCal()};
+  document.querySelectorAll('.day').forEach(b=>b.onclick=()=>pickDay(b.dataset.d));
+}
+function pickDay(s){
+  const msg=$('#calMsg');msg.className='msg';msg.textContent='';
+  if(!S.start||S.end||s<S.start){S.start=s;S.end=null;S.slot=null;renderCal();summary();return}
+  const n=diff(S.start,s);
+  if(n>S.max){msg.className='msg err';msg.textContent='You can rent for up to '+S.max+' days at a time.';return}
+  for(let i=0;i<n;i++){if((S.free[addD(S.start,i)]||0)<1){msg.className='msg err';msg.textContent='Some days in that range are already booked. Pick a shorter range.';return}}
+  S.end=s;renderCal();loadSlots();summary();
+}
+async function loadSlots(){
+  $('#st3').classList.remove('locked');$('#slotSub').textContent='Pickup on '+fmt(S.start)+'. Return by end of '+fmt(S.end)+'.';
+  $('#slots').innerHTML='<p class="sub">Loading…</p>';
+  const j=await api('/api/availability?camera='+S.cam.id+'&from='+S.start+'&to='+S.start+'&slots_for='+S.start);
+  const rows=j.slots||S.slots.map(s=>({...s,left:1,past:false}));
+  $('#slots').innerHTML=rows.map(s=>{const off=s.past||s.left<1;return `<button class="slot" data-id="${s.id}" aria-pressed="false" ${off?'disabled':''}>${esc(s.label)}<small>${s.past?'Already passed':s.left<1?'Fully booked':s.left+' left'}</small></button>`}).join('');
+  document.querySelectorAll('.slot').forEach(b=>b.onclick=()=>{S.slot=rows.find(r=>r.id===b.dataset.id);document.querySelectorAll('.slot').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#st4').classList.remove('locked');summary()});
+  S.slot=null;
+}
+function summary(){
+  const c=S.cam,n=S.start&&S.end?diff(S.start,S.end):S.start?1:0;
+  let r='';const row=(a,b)=>r+=`<div class="row"><span>${a}</span><b>${b}</b></div>`;
+  row('Camera',c?esc(c.name):'–');
+  row('Pickup',S.start?fmt(S.start)+(S.slot?', '+esc(S.slot.label):''):'–');
+  row('Return',S.end?fmt(S.end):'–');
+  row('Days',S.end?n:'–');
+  $('#sumRows').innerHTML=r;
+  const ok=c&&S.end&&S.slot;
+  $('#sumTot').textContent=ok?peso(c.price_per_day*n):'₱0';
+  $('#sumNote').textContent=ok?(c.deposit?'Plus a refundable deposit of '+peso(c.deposit)+' at pickup. Pay when you collect.':'Pay when you collect.'):'Pick a camera, dates and a pickup time.';
+  $('#submit').disabled=!ok;
+}
+$('#submit').onclick=async()=>{
+  const m=$('#subMsg');m.textContent='';
+  const b=$('#submit');b.disabled=true;b.textContent='Sending…';
+  const j=await api('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    camera_id:S.cam.id,start_date:S.start,days:diff(S.start,S.end),slot_id:S.slot.id,
+    name:$('#fName').value,phone:$('#fPhone').value,email:$('#fEmail').value,facebook:$('#fFb').value,notes:$('#fNotes').value,website:$('#fWeb').value})});
+  b.textContent='Request booking';
+  if(!j.success){m.textContent=j.error||'Something went wrong. Please try again.';summary();
+    if(/taken|booked/i.test(j.error||'')){const a=await api('/api/availability?camera='+S.cam.id+'&from='+S.today+'&to='+addD(S.today,180));S.free=a.free||S.free;S.start=S.end=S.slot=null;renderCal();$('#slots').innerHTML='';summary()}
+    return}
+  try{localStorage.setItem('ll_last',JSON.stringify({ref:j.booking.ref}))}catch{}
+  const k=j.booking;
+  $('#flow').innerHTML=`<div class="step done"><h3>Booking requested</h3><div class="vf box"><div style="font-size:14px;color:var(--mute)">Your reference</div><div class="ref">${esc(k.ref)}</div></div>
+   <p><b>${esc(k.camera_name||S.cam.name)}</b><br>${fmt(k.start_date||S.start)} to ${fmt(k.end_date||S.end)}, pickup ${esc(k.pickup_label||'')}</p>
+   <p>We'll message you on your mobile number to confirm. Screenshot this page or save the reference. You can check or cancel your booking any time with <b>Find my booking</b>.</p>
+   <p style="margin-top:18px"><button class="btn" onclick="location.href='/'">Book another</button></p></div>`;
+  $('#sum').style.display='none';$('#flow').parentElement.style.gridTemplateColumns='1fr';
+  $('#book').scrollIntoView({behavior:'smooth'});
+};
+/* lookup */
+function openLookup(){$('#lookup').classList.add('open');setTimeout(()=>$('#lkRef').focus(),50)}
+$('#openLookup').onclick=openLookup;$('#lkClose').onclick=()=>$('#lookup').classList.remove('open');
+$('#lookup').onclick=e=>{if(e.target.id==='lookup')$('#lookup').classList.remove('open')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#lookup').classList.remove('open')});
+$('#lkForm').onsubmit=async e=>{e.preventDefault();$('#lkMsg').textContent='';$('#lkRes').innerHTML='';
+  const j=await api('/api/bookings?ref='+encodeURIComponent($('#lkRef').value)+'&phone='+encodeURIComponent($('#lkPhone').value));
+  if(!j.success){$('#lkMsg').textContent=j.error||'Not found.';return}
+  const b=j.booking,can=['pending','confirmed'].includes(b.status);
+  $('#lkRes').innerHTML=`<div class="sum" style="position:static;margin-top:14px;border-width:1px"><div class="row"><span>Status</span><b><span class="badge ${b.status}">${b.status}</span></b></div>
+   <div class="row"><span>Camera</span><b>${esc(b.camera_name)}</b></div><div class="row"><span>Dates</span><b>${fmt(b.start_date)} to ${fmt(b.end_date)}</b></div>
+   <div class="row"><span>Pickup</span><b>${esc(b.pickup_label)}</b></div><div class="row"><span>Total</span><b>${peso(b.total)}</b></div>
+   ${can?'<button class="btn ghost sm" id="cx" style="margin-top:12px">Cancel booking</button>':''}</div>`;
+  const cx=$('#cx');if(cx)cx.onclick=async()=>{if(!confirm('Cancel booking '+b.ref+'?'))return;
+    const r=await api('/api/bookings?action=cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:b.ref,phone:$('#lkPhone').value})});
+    if(r.success){$('#lkRes').innerHTML='<p style="margin-top:14px"><b>Booking cancelled.</b></p>'}else $('#lkMsg').textContent=r.error||'Could not cancel.'};
+};
+init();
+})();
+</script>
+</body>
+</html>
